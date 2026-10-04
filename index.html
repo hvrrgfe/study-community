@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>学习群社区 · 以学会友</title>
+  <link rel="stylesheet" href="minis://workspace/study-community/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+</head>
+<body>
+
+<!-- ====== 顶部导航 ====== -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="goPage('home')">
+      <span class="logo-icon">📚</span>
+      <span class="logo-text">学习群</span>
+      <span class="logo-sub">社区</span>
+    </div>
+    <div class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" data-page="home" onclick="goPage('home')">🏠 首页</button>
+      <button class="nav-tab" data-page="leaderboard" onclick="goPage('leaderboard')">🏆 排行榜</button>
+      <button class="nav-tab" data-page="contributions" onclick="goPage('contributions')">⭐ 贡献榜</button>
+      <button class="nav-tab" data-page="resources" onclick="goPage('resources')">📚 资料库</button>
+      <button class="nav-tab" data-page="solutions" onclick="goPage('solutions')">✍️ 题解库</button>
+      <button class="nav-tab" data-page="moments" onclick="goPage('moments')">🎬 群史馆</button>
+      <button class="nav-tab" data-page="events" onclick="goPage('events')">📅 活动</button>
+    </div>
+    <div class="nav-right" id="navRight">
+      <!-- 登录后显示 -->
+      <div class="user-badge" id="userInfo" style="display:none">
+        <span class="user-avatar" id="userAvatar">👤</span>
+        <span class="user-name" id="userNameDisplay"></span>
+        <span class="user-title" id="userTitle"></span>
+        <button class="btn-sm btn-secondary" onclick="goPage('profile')">我的</button>
+        <button class="btn-sm btn-danger" onclick="logout()">退出</button>
+      </div>
+      <!-- 未登录 -->
+      <button class="btn-sm btn-primary" id="loginBtn" onclick="goPage('login')">登录</button>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== 主内容区 ====== -->
+<main id="main">
+  <div id="page-home" class="page active"></div>
+  <div id="page-leaderboard" class="page"></div>
+  <div id="page-contributions" class="page"></div>
+  <div id="page-resources" class="page"></div>
+  <div id="page-solutions" class="page"></div>
+  <div id="page-moments" class="page"></div>
+  <div id="page-events" class="page"></div>
+  <div id="page-login" class="page"></div>
+  <div id="page-profile" class="page"></div>
+</main>
+
+<!-- ====== 底部 ====== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-main">📚 学习群社区 · 以学会友，共同进步</p>
+    <p class="footer-sub">这里不只是刷题的地方 · 这里是「我们」的地方</p>
+  </div>
+</footer>
+
+<script>
+// 动态加载 app.js（minis:// 不支持 script src 加载本地文件，用间接 eval 注入全局作用域）
+(async function() {
+  try {
+    const resp = await fetch('minis://workspace/study-community/app.js');
+    const code = await resp.text();
+    window.eval(code);
+    console.log('app.js loaded via indirect eval');
+  } catch(e) {
+    console.error('Failed to load app.js:', e);
+    document.getElementById('page-home').innerHTML =
+      '<div class="empty-state"><div class="empty-icon">⚠️</div><p>加载失败: ' + e.message + '</p></div>';
+  }
+})();
+</script>
+</body>
+</html>
