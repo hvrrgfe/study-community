@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>学习群社区 · 以学会友</title>
-  <link rel="stylesheet" href="minis://workspace/study-community/style.css">
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
@@ -65,14 +65,20 @@
   </div>
 </footer>
 
+<script src="app.js"></script>
 <script>
-// 动态加载 app.js（minis:// 不支持 script src 加载本地文件，用间接 eval 注入全局作用域）
+// 双环境兼容加载器：
+// - GitHub Pages 等正常环境：上面 <script src="app.js"> 正常加载，此检测直接通过
+// - minis:// 内置浏览器：script src 无法加载本地文件，回退到 fetch + 间接 eval
 (async function() {
+  for (let i = 0; i < 10; i++) {
+    if (typeof init === 'function') return; // 已正常加载
+    await new Promise(r => setTimeout(r, 200));
+  }
   try {
     const resp = await fetch('minis://workspace/study-community/app.js');
     const code = await resp.text();
     window.eval(code);
-    console.log('app.js loaded via indirect eval');
   } catch(e) {
     console.error('Failed to load app.js:', e);
     document.getElementById('page-home').innerHTML =
